@@ -1,0 +1,24 @@
+function getWeatherPostSlack() {
+
+    var response = UrlFetchApp.fetch("http://weather.livedoor.com/forecast/webservice/json/v1?city=130010");
+
+    var json=JSON.parse(response.getContentText());
+
+    Logger.log(json["title"]);
+    Logger.log(json["description"]);
+    Logger.log(json["forecasts"]);  
+
+    var data={
+        "text":json["description"]["publicTime"]+json["description"]["text"],
+        "username": json["title"],
+        "icon_emoji" : ":sunny:"
+    }
+
+    var options =
+    {
+        "method" : "POST",
+        'contentType': 'application/json',
+        'payload' : JSON.stringify(data)
+    };
+    // SlackのIncoming WebhookのURLを取得して入力
+    UrlFetchApp.fetch("https://hooks.slack.com/services/***/***/***", options);
